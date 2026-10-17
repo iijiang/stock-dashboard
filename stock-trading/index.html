@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#15382f">
+  <meta name="description" content="Independent stock strategy scores, market context and trade setups from the Small Win Multi-Strategy Scanner.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; object-src 'none'">
+  <title>Small Win · Stock Strategy Dashboard</title>
+  <link rel="icon" href="dashboard/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="dashboard/app.css">
+  <script type="module" src="dashboard/app.mjs"></script>
+</head>
+<body>
+<a class="skip" href="#stock-list">Skip to stocks</a>
+<div class="layout">
+  <aside class="sidebar">
+    <a class="brand" href="./" aria-label="Small Win dashboard home"><span class="brand-icon" aria-hidden="true">↗</span><span>small win<span class="brand-sub">MARKET RESEARCH</span></span></a>
+    <div class="nav-label">STRATEGY EXPLORER</div>
+    <nav id="views" aria-label="Strategy views">
+      <button type="button" data-view="all" class="nav-item active" aria-current="page"><span>Overview</span><span class="nav-count" id="count-all">—</span></button>
+      <button type="button" data-view="mean_reversion" class="nav-item"><span><i class="dot mr"></i>Mean reversion</span><span class="nav-count" id="count-mean_reversion">—</span></button>
+      <button type="button" data-view="trend_pullback" class="nav-item"><span><i class="dot pb"></i>Trend pullback</span><span class="nav-count" id="count-trend_pullback">—</span></button>
+      <button type="button" data-view="breakout_momentum" class="nav-item"><span><i class="dot bo"></i>Breakout momentum</span><span class="nav-count" id="count-breakout_momentum">—</span></button>
+      <button type="button" data-view="multi" class="nav-item"><span>✳ Multi-signal</span><span class="nav-count" id="count-multi">—</span></button>
+    </nav>
+    <div class="sidebar-note"><span class="live-dot"></span> Independent signals<p>Three strategies. Three scores.<br>Explore each on its own merits.</p></div>
+    <div class="sidebar-footer">SMALL WIN PICKS<br><span>Multi-Strategy Scanner · v1.0</span></div>
+  </aside>
+  <main>
+    <header class="topbar"><span>Research desk <span class="crumb">/ US equities</span></span><div class="session-controls"><label for="session">Snapshot</label><select id="session"><option value="latest">Latest scan</option></select><button id="reload" type="button" class="icon-button" aria-label="Reload snapshot">↻</button></div></header>
+    <div class="content">
+      <div class="page-heading"><div><p class="eyebrow">YOUR DAILY MARKET VIEW</p><h1>Opportunities, in focus.</h1><p class="subtitle">Explore the setup. Understand the trend. Know the risk.</p></div><a class="button secondary" id="download" href="data/latest.json" download>↓ Download JSON</a></div>
+      <div id="error" class="notice error" role="alert" hidden></div>
+      <div id="loading" class="notice" role="status">Loading the saved stock scan…</div>
+      <noscript><p class="notice error">JavaScript is required to explore this dashboard. You can <a href="data/latest.json">download the saved JSON</a> instead.</p></noscript>
+      <section class="data-strip" aria-label="Report dates"><span><span class="live-dot"></span> Market data through <strong id="market-date">—</strong></span><span id="scan-time">Scan time —</span><span id="coverage">Coverage —</span></section>
+      <section class="stats" aria-label="Scan summary">
+        <article class="stat"><span class="stat-label">STOCKS EVALUATED</span><strong id="stat-stocks">—</strong><span id="stat-coverage">From the saved universe</span></article>
+        <article class="stat"><span class="stat-label">QUALIFYING STOCKS</span><strong id="stat-qualified">—</strong><span>Passed at least one strategy</span></article>
+        <article class="stat"><span class="stat-label">MULTI-SIGNAL SETUPS</span><strong id="stat-multi">—</strong><span>Two or more independent signals</span></article>
+        <article class="stat market-stat"><span class="stat-label">MARKET ENVIRONMENT</span><strong id="stat-market">—</strong><span id="market-detail">SPY · QQQ · VIX</span></article>
+      </section>
+      <section class="opportunities" aria-labelledby="opportunities-title"><div class="section-heading"><div><h2 id="opportunities-title">On the radar</h2><p>Top independently qualified setups. Select a ticker to see the full picture.</p></div><span class="pill">NO COMBINED SCORE</span></div><div id="top-picks" class="strategy-grid"></div></section>
+      <section id="stock-list" class="stock-section" aria-labelledby="list-title">
+        <div class="section-heading"><div><h2 id="list-title">All stocks</h2><p id="view-description">Compare independent strategy scores across the full universe.</p></div><span id="result-count" class="result-count" aria-live="polite">— stocks</span></div>
+        <div class="filters">
+          <label class="search-label"><span class="sr-only">Search ticker</span><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Find a ticker…" autocomplete="off" spellcheck="false"></label>
+          <label><span class="sr-only">Trend</span><select id="trend"><option value="">All trends</option></select></label>
+          <label><span class="sr-only">Risk</span><select id="risk"><option value="">All risk levels</option><option value="PASS">Pass</option><option value="CAUTION">Caution</option><option value="HIGH_RISK">High risk</option></select></label>
+          <label class="checkbox"><input id="fresh" type="checkbox"> Fresh bars only</label>
+          <button type="button" class="text-button" id="reset">Reset filters</button>
+        </div>
+        <div class="score-filters"><span>Minimum scores</span><label class="mr-text">MR <input id="min-mr" type="number" min="0" max="100" step="1" placeholder="Any" aria-label="Minimum Mean Reversion score"></label><label class="pb-text">PB <input id="min-pb" type="number" min="0" max="100" step="1" placeholder="Any" aria-label="Minimum Trend Pullback score"></label><label class="bo-text">BO <input id="min-bo" type="number" min="0" max="100" step="1" placeholder="Any" aria-label="Minimum Breakout Momentum score"></label><label class="sort-label">Sort <select id="sort"><option value="ticker:asc">Ticker A–Z</option><option value="mean_reversion:desc">MR score ↓</option><option value="trend_pullback:desc">PB score ↓</option><option value="breakout_momentum:desc">BO score ↓</option><option value="price:desc">Price ↓</option><option value="signal_count:desc">Signal count ↓</option></select></label></div>
+        <div class="table-wrap"><table id="stocks"><caption class="sr-only">Stock prices, independent strategy scores, trend, risk and market-bar dates</caption><thead><tr><th scope="col" data-sort="ticker" aria-sort="ascending"><button type="button">Ticker ↕</button></th><th scope="col" data-sort="price"><button type="button">Price ↕</button></th><th scope="col" data-sort="mean_reversion"><button type="button" title="Mean Reversion score">MR ↕</button></th><th scope="col" data-sort="trend_pullback"><button type="button" title="Trend Pullback score">PB ↕</button></th><th scope="col" data-sort="breakout_momentum"><button type="button" title="Breakout Momentum score">BO ↕</button></th><th scope="col">Trend / stock state</th><th scope="col">Risk filter</th><th scope="col">Signals</th><th scope="col">Market bar</th></tr></thead><tbody id="rows"></tbody></table></div>
+        <div id="mobile-stocks" class="mobile-stocks"></div><p id="empty" class="empty" hidden>No stocks match these filters. Try lowering a minimum score or clearing the filters.</p>
+        <p class="table-note"><span class="mr-text">MR</span> Mean Reversion <span class="pb-text">PB</span> Trend Pullback <span class="bo-text">BO</span> Breakout Momentum. Scores run from 0–100; qualification also requires structure, liquidity and valid trade levels.</p>
+      </section>
+      <details class="method"><summary>Market context & scan diagnostics</summary><div id="diagnostics"></div></details>
+      <footer>Technical screening, not a prediction. <strong>Company news is not checked.</strong> Prices and trade levels use adjusted historical data. <span id="versions"></span></footer>
+    </div>
+  </main>
+</div>
+<dialog id="stock-dialog" aria-labelledby="detail-title"><div class="dialog-top"><span class="eyebrow">STOCK RESEARCH</span><button type="button" id="close-dialog" class="icon-button" aria-label="Close stock details">✕</button></div><div id="detail"></div></dialog>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "latest_market_date": "2026-10-16",
+  "sessions": [
+    {
+      "market_date": "2026-10-16",
+      "scan_datetime": "2026-10-17T13:24:13.332384+11:00",
+      "stocks_scanned": 501,
+      "fresh": 495,
+      "stale": 6,
+      "failed": 0
+    }
+  ]
+}
