@@ -8,8 +8,8 @@
     "risk_filter": "1.0"
   },
   "scan": {
-    "scan_date": "2026-10-24",
-    "scan_datetime": "2026-10-24T12:25:02.492737+11:00",
+    "scan_date": "2026-10-25",
+    "scan_datetime": "2026-10-25T12:25:01.970226+11:00",
     "scan_timezone": "Australia/Sydney",
     "market_date": "2026-10-23",
     "daily_snapshot": {
